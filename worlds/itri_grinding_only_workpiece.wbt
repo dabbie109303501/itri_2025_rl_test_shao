@@ -1,0 +1,336 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+
+WorldInfo {
+  basicTimeStep 16
+  contactProperties [
+    ContactProperties {
+      material1 "Aluminum alloy"
+      material2 "Aluminum Oxide"
+      coulombFriction [
+        0.3
+      ]
+      softERP 0
+    }
+  ]
+}
+Viewpoint {
+  orientation -0.013123426027938704 0.013506254048674518 0.9998226626711669 1.5422236070091895
+  position 0.4998992544182103 -0.8257615425706643 0.778123845628109
+}
+Background {
+  skyColor [
+    0.494118 0.6 0.717647
+  ]
+}
+TexturedBackgroundLight {
+  castShadows FALSE
+}
+Solid {
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/textures/parquetry/chequered_parquetry_base_color.jpg"
+          ]
+        }
+        roughness 1
+        roughnessMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/textures/parquetry/chequered_parquetry_roughness.jpg"
+          ]
+        }
+        metalness 0
+        normalMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/textures/parquetry/chequered_parquetry_normal.jpg"
+          ]
+        }
+        occlusionMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/textures/parquetry/chequered_parquetry_occlusion.jpg"
+          ]
+        }
+      }
+      geometry IndexedFaceSet {
+        coord Coordinate {
+          point [
+            -5 -5 0
+            5 -5 0
+            -5 5 0
+            5 5 0
+          ]
+        }
+        texCoord TextureCoordinate {
+          point [
+            0 0
+            20 0
+            0 20
+            20 20
+          ]
+        }
+        coordIndex [
+          2, 0, 1, 3, -1
+        ]
+        texCoordIndex [
+          2, 0, 1, 3, -1
+        ]
+      }
+    }
+  ]
+  name "floor"
+  model "floor"
+  boundingObject Plane {
+    size 10 10
+  }
+  locked TRUE
+}
+DEF box Solid {
+  translation 2.588210000034056 -0.006567241267240758 0.39994114
+  rotation 6.3906737725447344e-18 3.800227195176942e-17 0.9999999999999999 -3.1408923578507193
+  children [
+    DEF BOX_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/factory/containers/protos/textures/wooden_box_base_color.jpg"
+          ]
+        }
+        roughnessMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/factory/containers/protos/textures/wooden_box_roughness.jpg"
+          ]
+        }
+        metalness 0
+        normalMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/factory/containers/protos/textures/wooden_box_normal.jpg"
+          ]
+        }
+        occlusionMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/factory/containers/protos/textures/wooden_box_occlusion.jpg"
+          ]
+        }
+      }
+      geometry Box {
+        size 0.5 0.5 0.8
+      }
+    }
+  ]
+  name "wooden box"
+  model "wooden box"
+  boundingObject USE BOX_SHAPE
+  physics Physics {
+    density -1
+    mass 0.3
+    centerOfMass [
+      0 0 0
+    ]
+    inertiaMatrix [
+      0.022250000000000002 0.022250000000000002 0.0125
+      0 0 0
+    ]
+  }
+}
+Robot {
+  translation 0.53 0 0.775
+  rotation 1 0 0 1.5708003061004252
+  children [
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 1
+      }
+      device [
+        DEF wheel_motor_2 RotationalMotor {
+          name "wheel_motor_2"
+          maxVelocity 30
+        }
+      ]
+      endPoint DEF grinding_wheel Solid {
+        children [
+          Solid {
+            children [
+              DEF wheel Shape {
+                appearance PBRAppearance {
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.06
+                }
+              }
+            ]
+            boundingObject USE wheel
+            physics Physics {
+              mass 0.1
+            }
+          }
+        ]
+      }
+    }
+  ]
+  name "robot(1)"
+  contactMaterial "Aluminum Oxide"
+  controller "<none>"
+  supervisor TRUE
+}
+DEF grinder Robot {
+  children [
+    DEF grinder Solid {
+      translation 0.93 0.185 -0.0007830134487638515
+      rotation 0 0 1 3.141592653589793
+      children [
+        Solid {
+          translation -5.143503540250283e-05 -1.8933227527717644e-06 -0.001483501809758675
+          rotation 0.6546688548142531 -0.4315899191969425 -0.6205955463776476 1.7388959201076813e-05
+          children [
+            Solid {
+              children [
+                Solid {
+                  children [
+                    Shape {
+                      appearance PBRAppearance {
+                        baseColor 0.529412 0.54902 0.54902
+                      }
+                      geometry DEF Grinder_Right Mesh {
+                        url [
+                          "../workpiece/Grinder_RightBelt.stl"
+                        ]
+                      }
+                    }
+                  ]
+                }
+                Shape {
+                  appearance PBRAppearance {
+                    baseColor 0.529412 0.54902 0.54902
+                  }
+                  geometry DEF Grinder_Left Mesh {
+                    url [
+                      "../workpiece/Grinder_LeftBelt.stl"
+                    ]
+                  }
+                }
+              ]
+            }
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.976471 0.85098 0.14902
+              }
+              geometry DEF Grinder_Shell Mesh {
+                url [
+                  "../workpiece/Grinder_Shell.stl"
+                ]
+              }
+            }
+          ]
+          physics Physics {
+          }
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.976471 0.85098 0.14902
+          }
+          geometry DEF Grinder_Bottom Mesh {
+            url [
+              "../workpiece/Grinder_Bottom.stl"
+            ]
+          }
+        }
+      ]
+      name "solid(1)"
+      physics Physics {
+        mass 4
+      }
+    }
+  ]
+  name "robot(2)"
+  controller "<none>"
+}
+Solid {
+  translation 0.14 0 0.05
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry Mesh {
+        url [
+          "../../to_itri-main/itri_2025project_midterm/Workpieces/Flat.stl"
+        ]
+      }
+    }
+  ]
+}
+DEF p30 Solid {
+  translation 0.14 0 0.05
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry Mesh {
+        url [
+          "../../to_itri-main/itri_2025project_midterm/Workpieces/Singe_curve.stl"
+        ]
+      }
+    }
+  ]
+  name "solid(1)"
+}
+DEF p60 Solid {
+  translation 0.14 0 0.05
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry Mesh {
+        url [
+          "../../to_itri-main/itri_2025project_midterm/Workpieces/Double_curve.stl"
+        ]
+      }
+    }
+  ]
+  name "solid(2)"
+}
+DEF Flat Robot {
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry DEF FLAT Mesh {
+        url [
+          "../Workpieces/Flat.stl"
+        ]
+      }
+    }
+    DEF p0 Solid {
+      children [
+        TouchSensor {
+          name "force sensor"
+          boundingObject USE FLAT
+          type "force-3d"
+        }
+        DEF P0 Shape {
+          appearance PBRAppearance {
+          }
+          geometry USE FLAT
+        }
+      ]
+      boundingObject USE FLAT
+      physics Physics {
+        density 0.01
+        mass 1
+      }
+    }
+  ]
+  name "robot(3)"
+  recognitionColors [
+    0 0 0
+  ]
+  controller "force_test"
+  supervisor TRUE
+}
+Pose {
+  translation 0.62196 -0.00208465 0.64305
+  rotation 0 1 0 0.5235987756
+}
