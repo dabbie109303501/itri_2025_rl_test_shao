@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="LRMate-200iD">
+  <link
+    name="Base">
+    <inertial>
+      <origins
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="4.85328944881567" />
+      <inertia
+        ixx="0.0219866138695383"
+		ixy="0.000143030504983191"
+		ixz="0.000118504116957291"
+		iyy="0.0228011824587363"
+		iyz="3.06008744367205E-05"
+		izz="0.0238292245301772" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LRMate-200iD/meshes/base.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LRMate-200iD/meshes/base.stl" />
+      </geometry>
+    </collision>
+  </link>
+
+</robot>
