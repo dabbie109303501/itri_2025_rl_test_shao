@@ -9,7 +9,7 @@ from OCC.Core.BRep import BRep_Tool
 
 # 載入 .igs 檔
 reader = IGESControl_Reader()
-f="J3ARM_UNIT_7L_new"
+f="J6RB_COVER_new"
 status = reader.ReadFile("igs/"+f+".igs")
 
 if status == IFSelect_RetDone:

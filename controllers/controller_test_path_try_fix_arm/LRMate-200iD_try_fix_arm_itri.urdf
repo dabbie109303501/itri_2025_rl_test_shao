@@ -3,7 +3,7 @@
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
-  name="LRMate-200iD">
+  name="LRMate200iD">
   <link
     name="Base">
     <inertial>
@@ -44,5 +44,63 @@
       </geometry>
     </collision>
   </link>
-
+  
+  <link
+    name="J1">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="14.3548583797231" />
+      <inertia
+        ixx="0.905961667890462"
+        ixy="-0.000630585508551185"
+        ixz="-0.132429780051495"
+        iyy="0.959094388040307"
+        iyz="-0.00083158726434221"
+        izz="0.132638947385101" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://stl/J1BASE_UNIT_0.001.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://stl/J2BASE_UNIT_0.001.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="J1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.169"
+      rpy="0 0 0" />
+    <parent
+      link="Base" />
+    <child
+      link="J1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-2.9671"
+      upper="2.9671"
+      effort="0"
+      velocity="0" />
+  </joint>
 </robot>
