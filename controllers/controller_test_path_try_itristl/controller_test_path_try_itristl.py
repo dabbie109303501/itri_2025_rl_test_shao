@@ -391,9 +391,9 @@ def directly_go_to_target(quaternion,p_w_new): #no angle
     print("工件座標q",q_w)
     pos=get_endpoint_position([0,0,0,0,0,0,0])
     p_e = np.array([pos[0][3],pos[1][3],pos[2][3]])#手臂末端位置
-    print("1=",p_e)
-    p_e = np.array([0.424132,-0.00133899,0.67624])
-    print("2=",p_e)
+    # print("1=",p_e)
+    # p_e = np.array([0.424132,-0.00133899,0.67624])
+    # print("2=",p_e)
     q_ = np.array([0.999998, -0.00169276,  0.00125543,  1.57158])#手臂末端四位元
     q_e = axis_angle_to_quaternion(q_[:3],q_[3])
     print("手臂座標",pos[0][3],pos[1][3],pos[2][3])
@@ -410,8 +410,6 @@ def normalize_quaternion(q):
     return q / np.linalg.norm(q)
 # #-----------------------------------------------------------------------
 
-# import numpy as np
-# from scipy.spatial.transform import Rotation as R
 
 motors = []
 motors.append(supervisor.getDevice('J1'))
@@ -421,198 +419,48 @@ motors.append(supervisor.getDevice('J4'))
 motors.append(supervisor.getDevice('J5'))
 motors.append(supervisor.getDevice('J6'))
 
-# # 初始化手臂位置
+# 初始化手臂位置
+for motor in motors:
+    motor.setPosition(float('inf'))
+    motor.setVelocity(0)
+
 # for motor in motors:
-#     motor.setPosition(0.0)
+#     motor.setPosition(0)
 
-# sensors = []
-# for motor in motors:
-#     sensor = motor.getPositionSensor()
-#     sensor.enable(timestep)
-#     sensors.append(sensor)
+sensors = []
+for motor in motors:
+    sensor = motor.getPositionSensor()
+    sensor.enable(timestep)
+    sensors.append(sensor)
 
-# # 初始化關節角度
-# sensor_values = [s.getValue() for s in sensors]
-# current_joint_angles = [0] + sensor_values  # ikpy 需要7個joint (base + 6 joint)
+target_pos=np.array([0.54,0.538782,0.538782])
+target_rota=Rotation_matrix(0,0,0)
+angles=get_IK_angle(target_pos,target_rota,"all",[0,0,0,0,0,0,0])
 
-# # 測試用點
-# target_pos = [-0.011807, -0.470684, 0.647423]  # 目標位置
-# target_quat = [-0.353538, 0.612378, -0.35356, 0.612372]  # 目標四元數
-# target_rot_matrix = quaternion_to_matrix(target_quat)  # 轉成旋轉矩陣
-
-# # 使用IK求解角度
-# ik_angles = get_IK_angle(target_pos, target_rot_matrix, starting_nodes_angles=current_joint_angles)
-# print("IK Angles:", ik_angles[1:])
-
-# # 讓馬達動到目標位置
-# for n, motor in enumerate(motors):
-#     motor.setPosition(ik_angles[n + 1])  # ikpy第0個是虛擬base
-# step_counter=0
-# # 確認末端點位置
-# while supervisor.step(timestep) != -1:
-#     sensor_values = [s.getValue() for s in sensors]
-#     current_joint_angles = [0] + sensor_values
-#     now_pos = get_endpoint_position(current_joint_angles)
-#     print("Current End-Effector Position:", now_pos[0][3], now_pos[1][3], now_pos[2][3])
-
-#     node = supervisor.getFromDef("solidd")
-#     node.getField('translation').setSFVec3f([now_pos[0][3], now_pos[1][3], now_pos[2][3]])
-
-#     step_counter += 1
-#     if step_counter > 500:
-#         break
-
-# from spatialmath import SE3
-# import numpy as np
-
-# def get_fk(joint_angles):
-#     q1, q2, q3, q4, q5, q6 = joint_angles
-
-#     # Base座標偏移 (Webots中的全域偏移)
-#     T_base = SE3(-0.005606, 3.81657e-05, -0.018816)
-
-#     # 各關節的DH轉換 (根據URDF + VRML確認)
-#     T1 = SE3(0, 0, 0.042741) * SE3.Rz(q1)
-#     T2 = SE3(0.05, 0, 0.28726) * SE3.Ry(q2)
-#     T3 = SE3(0, 0, 0.33) * SE3.Ry(-q3)  # 注意Webots是(0,-1,0)
-#     T4 = SE3(0.088001, 0, 0.035027) * SE3.Rx(-q4)
-#     T5 = SE3(0.2454, 0, 0) * SE3.Ry(-q5)
-#     T6 = SE3(0.05, 0, 0) * SE3.Rx(-q6)
-
-#     # 最後J6有一個固定的X軸90度旋轉（Webots的rotation）
-#     T_tool = SE3.Rx(np.pi/2)
-
-#     # 完整的正向運動學
-#     T = T_base * T1 * T2 * T3 * T4 * T5 * T6 * T_tool
-
-#     return T
-
-# # 例子：假設6個角度如下（單位: rad）
-# joint_angle_list = [0, 0, 0, 0, 0, 0]
-
-# T = get_fk(joint_angle_list)
-
-# print("End Effector Position:", T.t)  # 平移向量 (X,Y,Z)
-# print("End Effector Rotation Matrix:\n", T.R)  # 旋轉矩陣
-
-import numpy as np
-
-
-def rot_x(theta):
-    c, s = np.cos(theta), np.sin(theta)
-    return np.array([
-        [1, 0,  0],
-        [0, c, -s],
-        [0, s,  c]
-    ])
-
-
-def rot_y(theta):
-    c, s = np.cos(theta), np.sin(theta)
-    return np.array([
-        [c,  0, s],
-        [0,  1, 0],
-        [-s, 0, c]
-    ])
-
-
-def rot_z(theta):
-    c, s = np.cos(theta), np.sin(theta)
-    return np.array([
-        [c, -s, 0],
-        [s,  c, 0],
-        [0,  0, 1]
-    ])
-
-# joint_angles = [0.5, 0, 0, 0, 0, 0]  # 所有關節角度 (單位: 弧度)
-_=0
-__=0
-nn=0
-for n, motor in enumerate(motors):
-    motor.setPosition(0)
-angles=[0,0,0,0,0,0,0]
-# for n, motor in enumerate(motors):
-#     motor.setPosition(angles[n+1])
-# base_node = supervisor.getFromDef("LRMate200iD")
-# base_node.getField('translation').setSFVec3f([0,0,0])
-# base_node = supervisor.getFromDef("J1")
-# base_node.getField('translation').setSFVec3f([0,0,0.169])
+print("start")
+count=0
 
 while supervisor.step(timestep) != -1:
-    for n, motor in enumerate(motors):
-        motor.setPosition(angles[n+1])
-    if nn==7:
-        break 
-    angles[nn+1]=_*0.1-1
-    if _>=20:
-      nn+=1
-      angles[nn]=0
-      _=0
-      
-       
-#     base_node = supervisor.getFromDef("LRMate200iD")
-#     base_node.getField('translation').setSFVec3f([0.0, -0.0804225935, 0.0])
-    # base_node = supervisor.getFromDef("solid")
-    # solid_pos=base_node.getField('translation').getSFVec3f()
-    # solid_rot=base_node.getField('rotation').getSFVec3f()
-    
-    j6_node = supervisor.getFromDef("J6")
-    j6_pos=j6_node.getPosition()
-    j6_rota=j6_node.getOrientation()
-
-    # print("pose_pos",pose_pos)
-    # print("pose_rota",euler_to_axis_angle(pose_rota_[0],pose_rota_[1],pose_rota_[2]))
-    # base_node = supervisor.getFromDef("LRMate200iD")
-    # cal_pos=get_endpoint_position(angles)
-    
-    
-    # R_B=np.array(axis_angle_to_rotation_matrix(solid_rot[:3],solid_rot[3])).reshape(3,3)
-    # T_B=np.array(solid_pos)
-
-    # angless=get_IK_angle(T_B,R_B,"all",[0,0,0,0,0,0,0])
     # for n, motor in enumerate(motors):
-    #     motor.setPosition(angless[n+1])
-    cal_pos=get_endpoint_position(angles)
-
-    # j6_node = supervisor.getFromDef("J6")
-    # j6_pos=j6_node.getPosition()
+    #     motor.setPosition(angles[n+1])
+    sensor_values = [s.getValue() for s in sensors]
+    for n, motor in enumerate(motors):
+        motor.setVelocity(angles[n+1]-sensor_values[n])
+    j6_pos=supervisor.getFromDef("J6").getPosition()
+    error=abs(target_pos-j6_pos)
+    print(error)
+    # angles_error=angles[1:]-sensor_values
+    # print(angles_error)
+    # if error[0]<0.000001 and error[1]<0.000001 and error[2]<0.000001:
+    #     for motor in motors:
+    #         motor.setVelocity(0)
+    #     print("j6_pos",j6_pos)
+    #     print("sensor_values",sensor_values)
+    #     print("angles",angles)
+    #     print("sensor_values",sensor_values)
+    #     break
+    # print("error",error)
     
-    __+=1
-    if __ >30:
-        __=0
-        _+=1
-        # print("angles",angles)
-        # print("angless",angless)
-        # print("j_pos",j6_pos)
-        # print("solid_pos",solid_pos)
-        # print("solid_rot",solid_rot)
-        # print("cal_pos",cal_pos[0][3],cal_pos[1][3],cal_pos[2][3])
-        # print("error_solid",solid_pos-np.array([cal_pos[0][3],cal_pos[1][3],cal_pos[2][3]]))
-        # print("j6_pos",j6_pos)
-        error=j6_pos-np.array([cal_pos[0][3],cal_pos[1][3],cal_pos[2][3]])
-        if abs(error[0])>0.0003 or abs(error[1])>0.0003 or abs(error[2])>0.0003:
-            print("error_j6",error)
-            print("cal_pos",cal_pos[0][3],cal_pos[1][3],cal_pos[2][3])
-            print("j6_pos",j6_pos)
-        # print("gpt_cal_pos",gpt_cal_pos)
-        # print("-->w_pose_t",w_pose_t)
-    #     _=0
-    #     __+=1
-    # if __==6:
-        # break
+    # print("angles",angles)
+    
 
-
-
-# print("w_a_r",w_a_r)
-# print("End Effector Position:", pos)
-# print("End Effector Rotation Matrix:\n", rot)
-
-# poss=get_endpoint_position([0]+joint_angles)
-# print("End Effector Position:", poss[0][3],poss[1][3],poss[2][3])
-# print("End Effector Rotation Matrix:\n", poss[:3,:3])
-# base_translation = np.array([-0.005606, 3.81656697e-05, -0.018816])  # Webots 的 Robot 初始位置
-
-# poss = get_endpoint_position([0]+joint_angles)
-# poss[:3, 3] += base_translation  # 位置修正
-
-# print("End Effector Position after correction:", poss[0,3], poss[1,3], poss[2,3])
